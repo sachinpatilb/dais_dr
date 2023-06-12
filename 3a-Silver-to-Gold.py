@@ -11,10 +11,51 @@
 
 # COMMAND ----------
 
+# Define widget
+dbutils.widgets.dropdown("site", "primary", ["primary","secondary"],"Choose Primary or Secondary site")
+
+# COMMAND ----------
+
+# Get the value of site
+site=dbutils.widgets.get("site")
+
+# COMMAND ----------
+
+if site =="primary":
+  src_path=primary_config['source_path']
+  checkpoint_path=primary_config['checkpoint_path']
+  schema_path=primary_config['schema_path']
+  raw_path=primary_config['raw_path']
+  db=primary_config['database']
+  bronze_table=primary_config['bronze_table']
+  silver_table=primary_config['silver_table']
+  gold_table_a=primary_config['gold_table_a']
+  gold_table_b=primary_config['gold_table_b']
+  bronze_stream=primary_config['bronze_stream']
+  silver_stream=primary_config['silver_stream']
+  gold_stream_a=primary_config['gold_stream_a']
+  gold_stream_b=primary_config['gold_stream_b']
+else:
+  src_path=secondary_config['source_path']
+  checkpoint_path=secondary_config['checkpoint_path']
+  schema_path=secondary_config['schema_path']
+  raw_path=secondary_config['raw_path']
+  db=secondary_config['database']
+  bronze_table=secondary_config['bronze_table']
+  silver_table=secondary_config['silver_table']
+  gold_table_a=secondary_config['gold_table_a']
+  gold_table_b=secondary_config['gold_table_b']
+  bronze_stream=primary_config['bronze_stream']
+  silver_stream=primary_config['silver_stream']
+  gold_stream_a=primary_config['gold_stream_a']
+  gold_stream_b=primary_config['gold_stream_b']
+
+# COMMAND ----------
+
 from pyspark.sql.functions import *
 
 gold_txn_df=spark.readStream \
-  .table(primary_config['silver_table']) \
+  .table(silver_table) \
   .withColumn("event_hour", date_format("event_time", "yyyy-MM-dd-HH")) \
   .groupBy("customer_id", "event_hour") \
   .agg(expr("count(customer_id) as no_of_txn"))
@@ -25,12 +66,12 @@ import json
 
 def upsertToDelta(microBatchOutputDF, epochId):
   spark_session = microBatchOutputDF._jdf.sparkSession() 
-  appId = primary_config['gold_stream_a']
+  appId = gold_stream_a
 
-  spark_session.conf().set("spark.databricks.delta.write.txnAppId", primary_config['gold_stream_a'])
+  spark_session.conf().set("spark.databricks.delta.write.txnAppId", gold_stream_a)
   spark_session.conf().set("spark.databricks.delta.write.txnVersion", epochId)
 
-  metadata = {"stream":primary_config['gold_stream_a'], "batch_id":epochId, "app_id":appId}
+  metadata = {"stream":gold_stream_a, "batch_id":epochId, "app_id":appId}
   spark_session.conf().set("spark.databricks.delta.commitInfo.userMetadata", json.dumps(metadata))
   # Set the dataframe to view name
   microBatchOutputDF.createOrReplaceTempView("updates")
@@ -51,11 +92,7 @@ def upsertToDelta(microBatchOutputDF, epochId):
 gold_txn_df.writeStream \
   .format("delta") \
   .foreachBatch(upsertToDelta) \
-  .queryName(primary_config['gold_stream_a'])\
+  .queryName(gold_stream_a)\
   .outputMode("update") \
-  .option("checkpointLocation",primary_config['checkpoint_path']+"/gold") \
+  .option("checkpointLocation",checkpoint_path+"/gold") \
   .start()
-
-# COMMAND ----------
-
-
