@@ -36,64 +36,6 @@ primary_config['gold_stream_b'] = "gold_stream_b"
 
 # COMMAND ----------
 
-# DBTITLE 1,Database
-# create database if not exists
-_ = spark.sql("create database if not exists {0} location '{1}'".format(primary_config['database'],primary_config['db_path']))
-
-# set current datebase context
-_ = spark.catalog.setCurrentDatabase(primary_config['database'])
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC create table if not exists gold_txn_live (
-# MAGIC   customer_id string,
-# MAGIC   event_hour string,
-# MAGIC   no_of_txn long
-# MAGIC );
-# MAGIC
-# MAGIC CREATE TABLE if not exists silver_txn (
-# MAGIC   amount STRING,
-# MAGIC   countryDest STRING,
-# MAGIC   countryOrig STRING,
-# MAGIC   customer_id STRING,
-# MAGIC   id STRING,
-# MAGIC   isUnauthorizedOverdraft STRING,
-# MAGIC   nameDest STRING,
-# MAGIC   nameOrig STRING,
-# MAGIC   newBalanceDest STRING,
-# MAGIC   newBalanceOrig STRING,
-# MAGIC   oldBalanceDest STRING,
-# MAGIC   oldBalanceOrig STRING,
-# MAGIC   step STRING,
-# MAGIC   type STRING,
-# MAGIC   event_time TIMESTAMP,
-# MAGIC   _rescued_data STRING,
-# MAGIC   diffOrig DOUBLE,
-# MAGIC   diffDest DOUBLE
-# MAGIC );
-# MAGIC
-# MAGIC CREATE TABLE if not exists bronze_txn (
-# MAGIC   amount STRING,
-# MAGIC   countryDest STRING,
-# MAGIC   countryOrig STRING,
-# MAGIC   customer_id STRING,
-# MAGIC   id STRING,
-# MAGIC   isUnauthorizedOverdraft STRING,
-# MAGIC   nameDest STRING,
-# MAGIC   nameOrig STRING,
-# MAGIC   newBalanceDest STRING,
-# MAGIC   newBalanceOrig STRING,
-# MAGIC   oldBalanceDest STRING,
-# MAGIC   oldBalanceOrig STRING,
-# MAGIC   step STRING,
-# MAGIC   type STRING,
-# MAGIC   event_time STRING,
-# MAGIC   _rescued_data STRING
-# MAGIC );
-
-# COMMAND ----------
-
 # MAGIC %md Setting up separate configs for secondary environment
 
 # COMMAND ----------
@@ -131,7 +73,3 @@ secondary_config['gold_stream_b'] = "gold_stream_b"
 
 # # set current datebase context
 # _ = spark.catalog.setCurrentDatabase(secondary_config['database'])
-
-# COMMAND ----------
-
-
