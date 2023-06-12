@@ -52,6 +52,11 @@ else:
 
 # COMMAND ----------
 
+# set current datebase context
+_ = spark.catalog.setCurrentDatabase(db)
+
+# COMMAND ----------
+
 from pyspark.sql.functions import *
 
 gold_txn_df=spark.readStream \

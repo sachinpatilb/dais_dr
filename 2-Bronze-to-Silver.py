@@ -53,6 +53,11 @@ else:
 
 # COMMAND ----------
 
+# set current datebase context
+_ = spark.catalog.setCurrentDatabase(db)
+
+# COMMAND ----------
+
 from pyspark.sql.functions import *
 
 _ = spark \
