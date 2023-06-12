@@ -9,10 +9,6 @@
 
 # COMMAND ----------
 
-# MAGIC %run "./0-database"
-
-# COMMAND ----------
-
 # Define widget
 dbutils.widgets.dropdown("site", "primary", ["primary","secondary"],"Choose Primary or Secondary site")
 
