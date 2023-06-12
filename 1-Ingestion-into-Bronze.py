@@ -50,6 +50,15 @@ else:
 
 # COMMAND ----------
 
+# set current datebase context
+_ = spark.catalog.setCurrentDatabase(db)
+
+# COMMAND ----------
+
+print(bronze_table)
+
+# COMMAND ----------
+
 # Read the input CSV file using AutoLoader
 _=(spark.readStream.format("cloudFiles")
             .option("cloudFiles.format","csv")
