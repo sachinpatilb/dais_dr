@@ -16,7 +16,7 @@ from pyspark.sql.functions import *
 
 _ = spark \
   .readStream \
-  .table("bronze_txn") \
+  .table(primary_config['bronze_table']) \
   .withColumn("event_time",to_timestamp("event_time", "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")) \
   .withColumn("diffOrig", col("newBalanceOrig")-col("oldBalanceOrig")) \
   .withColumn("diffDest", col("newBalanceDest")-col("oldBalanceDest")) \
@@ -25,5 +25,6 @@ _ = spark \
   .writeStream \
   .format("delta") \
   .outputMode("append") \
-  .option("checkpointLocation",config['checkpoint_path']+"/silver") \
-  .table("silver_txn")
+  .option("checkpointLocation",primary_config['checkpoint_path']+"/silver") \
+  .queryName(primary_config['silver_stream'])\
+  .table(primary_config['silver_table'])

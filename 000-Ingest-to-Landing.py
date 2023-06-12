@@ -7,8 +7,8 @@ import time
 import os
 
 # Set up source and destination folder paths
-raw_dir = config['raw_path']
-src_dir = config['source_path']
+raw_dir = primary_config['raw_path']
+src_dir = primary_config['source_path']
 # src_dir = config['source_path']
 
 # Get list of files in source folder, ordered by name
@@ -24,4 +24,5 @@ for file in files:
   time.sleep(10) # sleep for 1 second between copy operations
 
 # COMMAND ----------
+
 
