@@ -62,3 +62,8 @@ describe detail dais_dr.bronze_txn
 
 -- COMMAND ----------
 
+show create table dais_dr.gold_txn_window
+
+-- COMMAND ----------
+
+
