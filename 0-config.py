@@ -24,7 +24,7 @@ primary_config['database'] = 'primary_db_dais'
 primary_config['source_path'] = primary_config['mount_point'] + '/src'
 primary_config['checkpoint_path'] = primary_config['mount_point'] + '/checkpoint'
 primary_config['schema_path'] = primary_config['mount_point'] + '/schema'
-primary_config['raw_path'] = primary_config['mount_point'] + '/raw'
+primary_config['raw_path'] = '/Users/sachin.patil@databricks.com/dais/raw'
 
 primary_config['bronze_table'] = "bronze_txn"
 primary_config['silver_table'] = "silver_txn"
@@ -54,7 +54,7 @@ primary2_config['database'] = 'primary2_db_dais'
 primary2_config['source_path'] = primary2_config['mount_point'] + '/src'
 primary2_config['checkpoint_path'] = primary2_config['mount_point'] + '/checkpoint'
 primary2_config['schema_path'] = primary2_config['mount_point'] + '/schema'
-primary2_config['raw_path'] = primary2_config['mount_point'] + '/raw'
+primary2_config['raw_path'] = '/Users/sachin.patil@databricks.com/dais/raw'
 
 primary2_config['bronze_table'] = "bronze_txn"
 primary2_config['silver_table'] = "silver_txn"
@@ -86,7 +86,7 @@ secondary_config['database'] = 'secondary_db_dais'
 secondary_config['source_path'] = secondary_config['mount_point'] + '/src'
 secondary_config['checkpoint_path'] = secondary_config['mount_point'] + '/checkpoint'
 secondary_config['schema_path'] = secondary_config['mount_point'] + '/schema'
-secondary_config['raw_path'] = secondary_config['mount_point'] + '/raw'
+secondary_config['raw_path'] = '/Users/sachin.patil@databricks.com/dais/raw'
 
 secondary_config['bronze_table'] = "bronze_txn"
 secondary_config['silver_table'] = "silver_txn"
@@ -114,7 +114,7 @@ secondary2_config['database'] = 'secondary2_db_dais'
 secondary2_config['source_path'] = secondary2_config['mount_point'] + '/src'
 secondary2_config['checkpoint_path'] = secondary2_config['mount_point'] + '/checkpoint'
 secondary2_config['schema_path'] = secondary2_config['mount_point'] + '/schema'
-secondary2_config['raw_path'] = secondary2_config['mount_point'] + '/raw'
+secondary2_config['raw_path'] = '/Users/sachin.patil@databricks.com/dais/raw'
 
 secondary2_config['bronze_table'] = "bronze_txn"
 secondary2_config['silver_table'] = "silver_txn"
