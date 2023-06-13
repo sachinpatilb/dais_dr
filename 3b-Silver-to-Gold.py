@@ -99,9 +99,10 @@ gold_txn_df = spark.readStream \
   .selectExpr("window.start as start_time", "customer_id", "no_of_txn") \
   .writeStream \
   .format("delta") \
+  .queryName(gold_stream_b)\
   .outputMode("append") \
   .option("checkpointLocation",checkpoint_path+"/gold") \
-  .table(gold_stream_b)
+  .table(gold_table_b)
 
 # COMMAND ----------
 
