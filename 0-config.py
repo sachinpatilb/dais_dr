@@ -133,3 +133,60 @@ secondary2_config['gold_stream_b'] = "gold_stream_b"
 
 # # set current datebase context
 # _ = spark.catalog.setCurrentDatabase(secondary_config['database'])
+
+# COMMAND ----------
+
+def get_configs(site, config):
+  if site =="primary":
+    config['src_path']=primary_config['source_path']
+    config['checkpoint_path']=primary_config['checkpoint_path']
+    config['schema_path']=primary_config['schema_path']
+    config['raw_path']=primary_config['raw_path']
+    config['db']=primary_config['database']
+    config['bronze_table']=primary_config['bronze_table']
+    config['silver_table']=primary_config['silver_table']
+    config['gold_table']=primary_config['gold_table_a']
+    config['bronze_stream']=primary_config['bronze_stream']
+    config['silver_stream']=primary_config['silver_stream']
+    config['gold_stream']=primary_config['gold_stream_a']
+    config['db_path']=primary_config['db_path']
+  elif site =="primary2":
+    config['src_path']=primary2_config['source_path']
+    config['checkpoint_path']=primary2_config['checkpoint_path']
+    config['schema_path']=primary2_config['schema_path']
+    config['raw_path']=primary2_config['raw_path']
+    config['db']=primary2_config['database']
+    config['bronze_table']=primary2_config['bronze_table']
+    config['silver_table']=primary2_config['silver_table']
+    config['gold_table']=primary2_config['gold_table_b']
+    config['bronze_stream']=primary2_config['bronze_stream']
+    config['silver_stream']=primary2_config['silver_stream']
+    config['gold_stream']=primary2_config['gold_stream_b']
+    config['db_path']=primary2_config['db_path']
+  elif site =="secondary":
+    config['src_path']=secondary_config['source_path']
+    config['checkpoint_path']=secondary_config['checkpoint_path']
+    config['schema_path']=secondary_config['schema_path']
+    config['raw_path']=secondary_config['raw_path']
+    config['db']=secondary_config['database']
+    config['bronze_table']=secondary_config['bronze_table']
+    config['silver_table']=secondary_config['silver_table']
+    config['gold_table']=secondary_config['gold_table_a']
+    config['bronze_stream']=secondary_config['bronze_stream']
+    config['silver_stream']=secondary_config['silver_stream']
+    config['gold_stream']=secondary_config['gold_stream_a']
+    config['db_path']=secondary_config['db_path']
+  else:
+    config['src_path']=secondary2_config['source_path']
+    config['checkpoint_path']=secondary2_config['checkpoint_path']
+    config['schema_path']=secondary2_config['schema_path']
+    config['raw_path']=secondary2_config['raw_path']
+    config['db']=secondary2_config['database']
+    config['bronze_table']=secondary2_config['bronze_table']
+    config['silver_table']=secondary2_config['silver_table']
+    config['gold_table']=secondary2_config['gold_table_b']
+    config['bronze_stream']=secondary2_config['bronze_stream']
+    config['silver_stream']=secondary2_config['silver_stream']
+    config['gold_stream']=secondary2_config['gold_stream_b']
+    config['db_path']=secondary2_config['db_path']
+  return config

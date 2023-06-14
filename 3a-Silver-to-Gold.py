@@ -21,78 +21,19 @@ site=dbutils.widgets.get("site")
 
 # COMMAND ----------
 
-if site =="primary":
-  src_path=primary_config['source_path']
-  checkpoint_path=primary_config['checkpoint_path']
-  schema_path=primary_config['schema_path']
-  raw_path=primary_config['raw_path']
-  db=primary_config['database']
-  bronze_table=primary_config['bronze_table']
-  silver_table=primary_config['silver_table']
-  gold_table_a=primary_config['gold_table_a']
-  gold_table_b=primary_config['gold_table_b']
-  bronze_stream=primary_config['bronze_stream']
-  silver_stream=primary_config['silver_stream']
-  gold_stream_a=primary_config['gold_stream_a']
-  gold_stream_b=primary_config['gold_stream_b']
-  db_path=primary_config['db_path']
-elif site =="primary2":
-  src_path=primary2_config['source_path']
-  checkpoint_path=primary2_config['checkpoint_path']
-  schema_path=primary2_config['schema_path']
-  raw_path=primary2_config['raw_path']
-  db=primary2_config['database']
-  bronze_table=primary2_config['bronze_table']
-  silver_table=primary2_config['silver_table']
-  gold_table_a=primary2_config['gold_table_a']
-  gold_table_b=primary2_config['gold_table_b']
-  bronze_stream=primary2_config['bronze_stream']
-  silver_stream=primary2_config['silver_stream']
-  gold_stream_a=primary2_config['gold_stream_a']
-  gold_stream_b=primary2_config['gold_stream_b']
-  db_path=primary2_config['db_path']
-elif site =="secondary":
-  src_path=secondary_config['source_path']
-  checkpoint_path=secondary_config['checkpoint_path']
-  schema_path=secondary_config['schema_path']
-  raw_path=secondary_config['raw_path']
-  db=secondary_config['database']
-  bronze_table=secondary_config['bronze_table']
-  silver_table=secondary_config['silver_table']
-  gold_table_a=secondary_config['gold_table_a']
-  gold_table_b=secondary_config['gold_table_b']
-  bronze_stream=secondary_config['bronze_stream']
-  silver_stream=secondary_config['silver_stream']
-  gold_stream_a=secondary_config['gold_stream_a']
-  gold_stream_b=secondary_config['gold_stream_b']
-  db_path=secondary_config['db_path']
-else:
-  src_path=secondary2_config['source_path']
-  checkpoint_path=secondary2_config['checkpoint_path']
-  schema_path=secondary2_config['schema_path']
-  raw_path=secondary2_config['raw_path']
-  db=secondary2_config['database']
-  bronze_table=secondary2_config['bronze_table']
-  silver_table=secondary2_config['silver_table']
-  gold_table_a=secondary2_config['gold_table_a']
-  gold_table_b=secondary2_config['gold_table_b']
-  bronze_stream=secondary2_config['bronze_stream']
-  silver_stream=secondary2_config['silver_stream']
-  gold_stream_a=secondary2_config['gold_stream_a']
-  gold_stream_b=secondary2_config['gold_stream_b']
-  db_path=secondary2_config['db_path']
+config = get_configs(site,{})
 
 # COMMAND ----------
 
 # set current datebase context
-_ = spark.catalog.setCurrentDatabase(db)
+_ = spark.catalog.setCurrentDatabase(config['db'])
 
 # COMMAND ----------
 
 from pyspark.sql.functions import *
 
 gold_txn_df=spark.readStream \
-  .table(silver_table) \
+  .table(config['silver_table']) \
   .withColumn("event_hour", date_format("event_time", "yyyy-MM-dd-HH")) \
   .groupBy("customer_id", "event_hour") \
   .agg(expr("count(customer_id) as no_of_txn"))
@@ -103,12 +44,12 @@ import json
 
 def upsertToDelta(microBatchOutputDF, epochId):
   spark_session = microBatchOutputDF._jdf.sparkSession() 
-  appId = gold_stream_a
+  appId = config['gold_stream']
 
-  spark_session.conf().set("spark.databricks.delta.write.txnAppId", gold_stream_a)
+  spark_session.conf().set("spark.databricks.delta.write.txnAppId", config['gold_stream'])
   spark_session.conf().set("spark.databricks.delta.write.txnVersion", epochId)
 
-  metadata = {"stream":gold_stream_a, "batch_id":epochId, "app_id":appId}
+  metadata = {"stream":onfig['gold_stream'], "batch_id":epochId, "app_id":appId}
   spark_session.conf().set("spark.databricks.delta.commitInfo.userMetadata", json.dumps(metadata))
   # Set the dataframe to view name
   microBatchOutputDF.createOrReplaceTempView("updates")
@@ -116,7 +57,7 @@ def upsertToDelta(microBatchOutputDF, epochId):
   # Use the view name to apply MERGE
   # NOTE: You have to use the SparkSession that has been used to define the `updates` dataframe
   spark_session.sql("""
-    MERGE INTO gold_txn_live t
+    MERGE INTO config['gold_table'] t
     USING updates s
     ON s.customer_id = t.customer_id and s.event_hour=t.event_hour 
     WHEN MATCHED THEN UPDATE SET t.no_of_txn=s.no_of_txn+t.no_of_txn
@@ -129,7 +70,7 @@ def upsertToDelta(microBatchOutputDF, epochId):
 gold_txn_df.writeStream \
   .format("delta") \
   .foreachBatch(upsertToDelta) \
-  .queryName(gold_stream_a)\
+  .queryName(config['gold_stream'])\
   .outputMode("update") \
-  .option("checkpointLocation",checkpoint_path+"/gold") \
+  .option("checkpointLocation",config['checkpoint_path']+"/gold") \
   .start()
