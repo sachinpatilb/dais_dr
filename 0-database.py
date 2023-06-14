@@ -139,7 +139,7 @@ _ = spark.catalog.setCurrentDatabase(db)
 # MAGIC   customer_id STRING,
 # MAGIC   no_of_txn BIGINT
 # MAGIC );
-# MAGIC CREATE TABLE spark_catalog.primary_db_dais.offset_tracker (
+# MAGIC CREATE TABLE offset_tracker (
 # MAGIC   ingestion_file STRING,
 # MAGIC   primary_bronze_version BIGINT,
 # MAGIC   primary_gold_version BIGINT,
