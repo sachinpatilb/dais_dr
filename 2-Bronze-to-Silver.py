@@ -53,7 +53,7 @@ else :
   print(starting_offset)
   _ = spark \
     .readStream \
-    .option("startingVersion", starting_offset+1) \
+    .option("startingVersion", starting_offset) \
     .table(config['bronze_table']) \
     .withColumn("event_time",to_timestamp("event_time", "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")) \
     .withColumn("diffOrig", col("newBalanceOrig")-col("oldBalanceOrig")) \

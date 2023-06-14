@@ -39,7 +39,7 @@ def get_read_stream(site):
   else :
     starting_offset = spark.read.table("offset_tracker").agg(max(col("secondary_silver_version"))).collect()[0][0]
     print(starting_offset)
-    return spark.readStream.option("startingVersion", starting_offset+1)
+    return spark.readStream.option("startingVersion", starting_offset)
   
 gold_txn_df = get_read_stream(site) \
   .table(config['silver_table']) \
