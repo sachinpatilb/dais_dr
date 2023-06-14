@@ -51,9 +51,10 @@ def get_offsets(stream_config):
       .where("value like '%sourceVersion%'")
       .selectExpr("from_json(value,'sourceVersion INT, reservoirId STRING,isStartingVersion BOOLEAN,reservoirVersion INT,index INT') as json"))
     source_version = df.selectExpr("json.reservoirVersion + json.index as source_index").collect()[0][0]
+  # elif(stream_config['source_type'] == 'auto_loader')
   # def offset_fetcher(stream_config) :
   #   sink_obj = get_sink_offsets(stream_config['sink_type'], stream_config['sink_table_path'])
-  #   source_version = get_source_offsets(sink_obj)  
+  #   source_version = get_source_offsets(sink_obj)
   return {'source': source_version, 'sink': sink_version, 'stream_name': stream_config['stream_name']}
 
 # COMMAND ----------
@@ -66,6 +67,7 @@ bronze_stream_config = {'source_type':'auto_loader',
                         'stream_name': config['bronze_stream'],
                         'sink_path':f"{config['db_path']}/{config['bronze_table']}"}              
 #pending
+# bronze_offsets = get_offsets(bronze_stream_config)
 bronze_offsets={}
 
 # COMMAND ----------
