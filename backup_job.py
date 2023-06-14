@@ -91,7 +91,7 @@ gold_offsets
 # COMMAND ----------
 
 def validate_offsets (bronze_offsets , silver_offsets, gold_offsets):
-  return silver_offsets['sink'] == gold_offsets['source'] &&  bronze_offsetes['sink'] == silver_offsets['source']
+  return silver_offsets['sink'] == gold_offsets['source'] and bronze_offsetes['sink'] == silver_offsets['source']
 
 if (site == "primary"):
   sec_config = get_configs("secondary",{})
