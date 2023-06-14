@@ -28,7 +28,6 @@ _ = spark.catalog.setCurrentDatabase(config['db'])
 
 # COMMAND ----------
 
-1-Ingestion-into-Bronze
 # To enable detailed tracking of the files, recordEventChanges is available in DBR12.1.
 spark.conf.set("spark.databricks.cloudFiles.recordEventChanges", True)
 spark.conf.set("spark.databricks.cloudFiles.optimizedEventSerialization.enabled", True)
