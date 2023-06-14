@@ -17,7 +17,7 @@ config = get_configs(site,{})
 
 # COMMAND ----------
 
-from pyspark.sql import functions as F
+from pyspark.sql.functions import  col, from_json, max
 from pyspark.sql.types import *
 import os
 
@@ -28,9 +28,8 @@ def get_offsets(stream_config):
     stream_id = spark.read.json(f"{stream_config['checkpoint_path']}/metadata").collect()[0][0]
     sink_version = (spark.sql(f"""describe history delta.`{stream_config['sink_path']}`""")
                     .where(f"""operationParameters.queryId == '{stream_id}' """)
-                    .agg(F.max(F.col("version")))).collect()[0][0]
+                    .agg(max(col("version")))).collect()[0][0]
   elif(stream_config['sink_type'] == 'foreachbatch') :
-    from pyspark.sql.functions import col,from_json
     userMetadataSchema =  schema = StructType([ \
       StructField("stream",StringType(),True), \
       StructField("batch_id",IntegerType(),True), \
@@ -38,7 +37,7 @@ def get_offsets(stream_config):
     ])
     sink_version = (spark.sql(f"""describe history delta.`{stream_config['sink_path']}`""")
           .withColumn("userMetadataJson", from_json("userMetadata",userMetadataSchema))
-          .orderBy(F.col("userMetadataJson.batch_id").desc()).select("version").first()[0])
+          .orderBy(col("userMetadataJson.batch_id").desc()).select("version").first()[0])
   file_name = f"""{stream_config['sink_path']}/_delta_log/{str(sink_version).zfill(20)}.json"""
   latest_batch_id = spark.read.json(file_name).select("txn.*").dropna().select("version").collect()[0][0]
   
@@ -92,8 +91,7 @@ gold_offsets
 # COMMAND ----------
 
 def validate_offsets (bronze_offsets , silver_offsets, gold_offsets):
-  #bronze_offsetes['sink'] == silver_offsets['source']
-  return silver_offsets['sink'] == gold_offsets['source']
+  return silver_offsets['sink'] == gold_offsets['source'] &&  bronze_offsetes['sink'] == silver_offsets['source']
 
 if (site == "primary"):
   sec_config = get_configs("secondary",{})
