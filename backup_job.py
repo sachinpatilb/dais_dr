@@ -28,7 +28,7 @@ def get_offsets(stream_config):
     stream_id = spark.read.json(f"{stream_config['checkpoint_path']}/metadata").collect()[0][0]
     sink_version = (spark.sql(f"""describe history delta.`{stream_config['sink_path']}`""")
                     .where(f"""operationParameters.queryId == '{stream_id}' """)
-                    .agg(max(F.col("version")))).collect()[0][0]
+                    .agg(F.max(F.col("version")))).collect()[0][0]
   elif(stream_config['sink_type'] == 'foreachbatch') :
     from pyspark.sql.functions import col,from_json
     userMetadataSchema =  schema = StructType([ \
@@ -63,6 +63,7 @@ bronze_stream_config = {'source_type':'auto_loader',
                         'stream_name': config['bronze_stream'],
                         'sink_path':f"{config['db_path']}/{config['bronze_table']}"}              
 bronze_offsets = get_offsets(bronze_stream_config)
+bronze_offsets
 
 # COMMAND ----------
 
