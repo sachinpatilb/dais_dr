@@ -3,10 +3,6 @@
 
 # COMMAND ----------
 
-primary_config.get("db_path")
-
-# COMMAND ----------
-
 # Define widget
 dbutils.widgets.dropdown("site", "primary", ["primary","secondary","primary2","secondary2"],"Choose Primary or Secondary site")
 
@@ -135,5 +131,18 @@ offsets['secondary_silver_version'] = DeltaTable.forPath(spark, f"{sec_config['d
 offsets['secondary_gold_version'] = DeltaTable.forPath(spark, f"{sec_config['db_path']}/{sec_config['gold_table']}").history().agg(max(col("version"))).collect()[0][0]
 
 df = spark.createDataFrame([offsets])
+df.display()
+
+# COMMAND ----------
+
+# DBTITLE 1,Write to primary db
 df.write.mode("append").saveAsTable(f"{config['db']}.offset_tracker")
+
+# COMMAND ----------
+
+# DBTITLE 1,Write to secondary db
 df.write.mode("append").saveAsTable(f"{sec_config['db']}.offset_tracker")
+
+# COMMAND ----------
+
+

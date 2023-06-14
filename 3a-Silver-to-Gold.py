@@ -32,7 +32,16 @@ _ = spark.catalog.setCurrentDatabase(config['db'])
 
 from pyspark.sql.functions import *
 
-gold_txn_df=spark.readStream \
+
+def get_read_stream(site): 
+  if(site == 'primary' or site == 'primary2') :
+    return spark.readStream
+  else :
+    starting_offset = spark.read.table("offset_tracker").agg(max(col("secondary_silver_version"))).collect()[0][0]
+    print(starting_offset)
+    return spark.readStream.option("startingVersion", starting_offset+1)
+  
+gold_txn_df = get_read_stream(site) \
   .table(config['silver_table']) \
   .withColumn("event_hour", date_format("event_time", "yyyy-MM-dd-HH")) \
   .groupBy("customer_id", "event_hour") \
@@ -49,15 +58,15 @@ def upsertToDelta(microBatchOutputDF, epochId):
   spark_session.conf().set("spark.databricks.delta.write.txnAppId", config['gold_stream'])
   spark_session.conf().set("spark.databricks.delta.write.txnVersion", epochId)
 
-  metadata = {"stream":onfig['gold_stream'], "batch_id":epochId, "app_id":appId}
+  metadata = {"stream":config['gold_stream'], "batch_id":epochId, "app_id":appId}
   spark_session.conf().set("spark.databricks.delta.commitInfo.userMetadata", json.dumps(metadata))
   # Set the dataframe to view name
   microBatchOutputDF.createOrReplaceTempView("updates")
 
   # Use the view name to apply MERGE
   # NOTE: You have to use the SparkSession that has been used to define the `updates` dataframe
-  spark_session.sql("""
-    MERGE INTO config['gold_table'] t
+  spark_session.sql(f"""
+    MERGE INTO {config['gold_table']} t
     USING updates s
     ON s.customer_id = t.customer_id and s.event_hour=t.event_hour 
     WHEN MATCHED THEN UPDATE SET t.no_of_txn=s.no_of_txn+t.no_of_txn
