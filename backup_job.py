@@ -19,6 +19,7 @@ config = get_configs(site,{})
 
 from pyspark.sql import functions as F
 from pyspark.sql.types import *
+import os
 
 def get_offsets(stream_config):
 
@@ -47,10 +48,9 @@ def get_offsets(stream_config):
       .where("value like '%sourceVersion%'")
       .selectExpr("from_json(value,'sourceVersion INT, reservoirId STRING,isStartingVersion BOOLEAN,reservoirVersion INT,index INT') as json"))
     source_version = df.selectExpr("json.reservoirVersion + json.index as source_index").collect()[0][0]
-  # elif(stream_config['source_type'] == 'auto_loader')
-  # def offset_fetcher(stream_config) :
-  #   sink_obj = get_sink_offsets(stream_config['sink_type'], stream_config['sink_table_path'])
-  #   source_version = get_source_offsets(sink_obj)
+  elif(stream_config['source_type'] == 'auto_loader'):
+    df = spark.sql(f"""SELECT path FROM cloud_files_state('{stream_config['checkpoint_path']}') order by commit_time desc limit 1""")
+    source_version = os.path.basename(df.collect()[0][0])
   return {'source': source_version, 'sink': sink_version, 'stream_name': stream_config['stream_name']}
 
 # COMMAND ----------
@@ -62,9 +62,7 @@ bronze_stream_config = {'source_type':'auto_loader',
                         'checkpoint_path':f"{config['checkpoint_path']}/bronze",
                         'stream_name': config['bronze_stream'],
                         'sink_path':f"{config['db_path']}/{config['bronze_table']}"}              
-#pending
-# bronze_offsets = get_offsets(bronze_stream_config)
-bronze_offsets={}
+bronze_offsets = get_offsets(bronze_stream_config)
 
 # COMMAND ----------
 
@@ -133,7 +131,7 @@ if(validate_offsets(bronze_offsets, silver_offsets, gold_offsets)) :
 
 offsets = {}
 
-offsets['ingestion_file'] = "filename" #needs to be replaced with bronze source
+offsets['ingestion_file'] = bronze_offsets['source'] #needs to be replaced with bronze source
 
 offsets['primary_bronze_version'] = silver_offsets['source']
 offsets['primary_silver_version'] = silver_offsets['sink']
