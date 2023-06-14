@@ -32,7 +32,7 @@ def get_offsets(stream_config):
     from pyspark.sql.functions import col,from_json
     userMetadataSchema =  schema = StructType([ \
       StructField("stream",StringType(),True), \
-      StructField("batch_id",StringType(),True), \
+      StructField("batch_id",IntegerType(),True), \
       StructField("app_id",StringType(),True) 
     ])
     sink_version = (spark.sql(f"""describe history delta.`{stream_config['sink_path']}`""")
@@ -98,23 +98,36 @@ def validate_offsets (bronze_offsets , silver_offsets, gold_offsets):
 
 if (site == "primary"):
   sec_config = get_configs("secondary",{})
+  sec_env = "secondary"
 elif(site == "primary2"):
   sec_config = get_configs("secondary2",{})
+  sec_env = "secondary2"
+
+#instantiate secondary database 
+dbutils.notebook.run("./0-database",60,{"site": sec_env})
+
+# COMMAND ----------
+
+from delta.tables import *
+
+def clone_table(src_path, dest_path, version, emptyCommit=True):
+  table = DeltaTable.forPath(spark, src_path)
+  table.cloneAtVersion(version,dest_path, replace=True)
+  if(emptyCommit) :
+    table.cloneAtVersion(version,dest_path, replace=True) # Empty commit workaround for now
 
 # COMMAND ----------
 
 # DBTITLE 1,Start cloning
-from delta.tables import *
-
 if(validate_offsets(bronze_offsets, silver_offsets, gold_offsets)) :
-  bronze_clone = DeltaTable.forPath(spark, f"{config['db_path']}/{config['bronze_table']}")
-  bronze_clone.cloneAtVersion(silver_offsets['source'],f"{sec_config['db_path']}/{sec_config['bronze_table']}", replace=True)
+  #cloning bronze
+  clone_table(f"{config['db_path']}/{config['bronze_table']}",f"{sec_config['db_path']}/{sec_config['bronze_table']}",silver_offsets['source'])
   
-  silver_clone = DeltaTable.forPath(spark, f"{config['db_path']}/{config['silver_table']}")
-  silver_clone.cloneAtVersion(silver_offsets['sink'],f"{sec_config['db_path']}/{sec_config['silver_table']}", replace=True)
-
-  gold_clone = DeltaTable.forPath(spark, f"{config['db_path']}/{config['gold_table']}")
-  silver_clone.cloneAtVersion(gold_offsets['sink'],f"{sec_config['db_path']}/{sec_config['gold_table']}", replace=True)
+  #cloning silver
+  clone_table(f"{config['db_path']}/{config['silver_table']}", f"{sec_config['db_path']}/{sec_config['silver_table']}", silver_offsets['sink'])
+  
+  #cloning gold
+  clone_table(f"{config['db_path']}/{config['gold_table']}", f"{sec_config['db_path']}/{sec_config['gold_table']}", gold_offsets['sink'])
 
 # COMMAND ----------
 
@@ -142,7 +155,3 @@ df.write.mode("append").saveAsTable(f"{config['db']}.offset_tracker")
 
 # DBTITLE 1,Write to secondary db
 df.write.mode("append").saveAsTable(f"{sec_config['db']}.offset_tracker")
-
-# COMMAND ----------
-
-

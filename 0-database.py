@@ -96,6 +96,10 @@ _ = spark.catalog.setCurrentDatabase(db)
 # MAGIC   event_hour string,
 # MAGIC   no_of_txn long
 # MAGIC );
+
+# COMMAND ----------
+
+# MAGIC %sql
 # MAGIC CREATE TABLE if not exists silver_txn (
 # MAGIC   amount STRING,
 # MAGIC   countryDest STRING,
@@ -116,6 +120,10 @@ _ = spark.catalog.setCurrentDatabase(db)
 # MAGIC   diffOrig DOUBLE,
 # MAGIC   diffDest DOUBLE
 # MAGIC );
+
+# COMMAND ----------
+
+# MAGIC %sql
 # MAGIC CREATE TABLE if not exists bronze_txn (
 # MAGIC   amount STRING,
 # MAGIC   countryDest STRING,
@@ -134,12 +142,21 @@ _ = spark.catalog.setCurrentDatabase(db)
 # MAGIC   event_time STRING,
 # MAGIC   _rescued_data STRING
 # MAGIC );
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC
 # MAGIC CREATE TABLE if not exists gold_txn_window (
 # MAGIC   start_time TIMESTAMP,
 # MAGIC   customer_id STRING,
 # MAGIC   no_of_txn BIGINT
 # MAGIC );
-# MAGIC CREATE TABLE offset_tracker (
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC CREATE TABLE if not exists offset_tracker (
 # MAGIC   ingestion_file STRING,
 # MAGIC   primary_bronze_version BIGINT,
 # MAGIC   primary_gold_version BIGINT,
@@ -148,7 +165,3 @@ _ = spark.catalog.setCurrentDatabase(db)
 # MAGIC   secondary_gold_version BIGINT,
 # MAGIC   secondary_silver_version BIGINT
 # MAGIC );
-
-# COMMAND ----------
-
-
