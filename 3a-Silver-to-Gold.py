@@ -32,6 +32,9 @@ _ = spark.catalog.setCurrentDatabase(config['db'])
 
 from pyspark.sql.functions import *
 
+spark.conf.set(
+  "spark.sql.streaming.stateStore.providerClass",
+  "com.databricks.sql.streaming.state.RocksDBStateStoreProvider")
 
 def get_read_stream(site): 
   if(site == 'primary' or site == 'primary2') :
