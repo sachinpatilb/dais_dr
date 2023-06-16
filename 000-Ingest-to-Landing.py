@@ -17,11 +17,6 @@ config = get_configs(site,{})
 
 # COMMAND ----------
 
-# set current datebase context
-_ = spark.catalog.setCurrentDatabase(config['db'])
-
-# COMMAND ----------
-
 from pyspark.sql.functions import *
 starting_file = spark.read.table("offset_tracker").agg(max(col("ingestion_file"))).collect()[0][0]
 
