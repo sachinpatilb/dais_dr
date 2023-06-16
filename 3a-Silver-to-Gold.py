@@ -55,14 +55,11 @@ gold_txn_df = get_read_stream(site) \
 import json
 import random
 
-appId = config['gold_stream']+random.randint(0,100)
+appId = config['gold_stream']+str(random.randint(0,100))
 
 def upsertToDelta(microBatchOutputDF, epochId):
   spark_session = microBatchOutputDF._jdf.sparkSession() 
   print(f"app-id :{appId}")
-
-  spark_session.conf().set("spark.databricks.delta.write.txnAppId", config['gold_stream'])
-  spark_session.conf().set("spark.databricks.delta.write.txnVersion", epochId)
 
   metadata = {"stream":config['gold_stream'], "batch_id":epochId, "app_id":appId}
   spark_session.conf().set("spark.databricks.delta.commitInfo.userMetadata", json.dumps(metadata))
@@ -89,3 +86,7 @@ gold_txn_df.writeStream \
   .outputMode("update") \
   .option("checkpointLocation",config['checkpoint_path']+"/gold") \
   .start()
+
+# COMMAND ----------
+
+
