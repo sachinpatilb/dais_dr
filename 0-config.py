@@ -76,7 +76,7 @@ if 'secondary_config' not in locals().keys():
   secondary_config = {}
 
 # mount point name
-secondary_config['mount_point'] ='/Users/sachin.patil@databricks.com/dais/secondary'
+secondary_config['mount_point'] ='/Users/sachin.patil@databricks.com/dais/secondary1'
 secondary_config['db_path'] = secondary_config['mount_point']+'/database'
 
 # database name
