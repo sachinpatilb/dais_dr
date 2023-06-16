@@ -17,11 +17,6 @@ config = get_configs(site,{})
 
 # COMMAND ----------
 
-from pyspark.sql.functions import *
-starting_file = spark.read.table("offset_tracker").agg(max(col("ingestion_file"))).collect()[0][0]
-
-# COMMAND ----------
-
 import time
 import os
 
@@ -42,6 +37,11 @@ if(site == 'primary' or site == 'primary2') :
     dbutils.fs.cp(raw_path, src_path)
     time.sleep(10) # sleep for 1 second between copy operations
 else:
+  # set current datebase context
+  _ = spark.catalog.setCurrentDatabase(config['db'])
+  from pyspark.sql.functions import *
+  starting_file = spark.read.table("offset_tracker").agg(max(col("ingestion_file"))).collect()[0][0]
+  
   # Copy each file to destination folder, with sleep interval
   for file in files:
     raw_path = file.path
