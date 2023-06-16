@@ -53,10 +53,13 @@ gold_txn_df = get_read_stream(site) \
 # COMMAND ----------
 
 import json
+import random
+
+appId = config['gold_stream']+random.randint(0,100)
 
 def upsertToDelta(microBatchOutputDF, epochId):
   spark_session = microBatchOutputDF._jdf.sparkSession() 
-  appId = config['gold_stream']
+  print(f"app-id :{appId}")
 
   spark_session.conf().set("spark.databricks.delta.write.txnAppId", config['gold_stream'])
   spark_session.conf().set("spark.databricks.delta.write.txnVersion", epochId)
