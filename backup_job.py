@@ -29,17 +29,19 @@ def get_offsets(stream_config):
     sink_version = (spark.sql(f"""describe history delta.`{stream_config['sink_path']}`""")
                     .where(f"""operationParameters.queryId == '{stream_id}' """)
                     .agg(max(col("version")))).collect()[0][0]
+    file_name = f"""{stream_config['sink_path']}/_delta_log/{str(sink_version).zfill(20)}.json"""
+    latest_batch_id = spark.read.json(file_name).select("txn.*").dropna().select("version").collect()[0][0]
   elif(stream_config['sink_type'] == 'foreachbatch') :
     userMetadataSchema =  schema = StructType([ \
       StructField("stream",StringType(),True), \
       StructField("batch_id",IntegerType(),True), \
       StructField("app_id",StringType(),True) 
     ])
-    sink_version = (spark.sql(f"""describe history delta.`{stream_config['sink_path']}`""")
+    sink_offsets = (spark.sql(f"""describe history delta.`{stream_config['sink_path']}`""")
           .withColumn("userMetadataJson", from_json("userMetadata",userMetadataSchema))
-          .orderBy(col("userMetadataJson.batch_id").desc()).select("version").first()[0])
-  file_name = f"""{stream_config['sink_path']}/_delta_log/{str(sink_version).zfill(20)}.json"""
-  latest_batch_id = spark.read.json(file_name).select("txn.*").dropna().select("version").collect()[0][0]
+          .orderBy(col("userMetadataJson.batch_id").desc()).select("version","userMetadataJson.batch_id")).first()
+    sink_version = sink_offsets[0]
+    latest_batch_id = sink_offsets[1]
   
   #find source offsets
   if(stream_config['source_type'] == 'delta'):
