@@ -20,6 +20,7 @@ config = get_configs(site,{})
 # COMMAND ----------
 
 if(mode == "all" or mode == "db_only") :
+  print(f"cleaning up database {config['db']}")
   # reset the database
   _ = spark.sql(f"DROP DATABASE IF EXISTS {config['db']} CASCADE")
   dbutils.fs.rm(config['db_path'], recurse=True)
@@ -27,6 +28,11 @@ if(mode == "all" or mode == "db_only") :
 # COMMAND ----------
 
 if(mode == "all" or mode == "checkpoint_only") :
+  print(f"cleaning up checkpoint {config['checkpoint_path']}, {config['src_path']}")
   # reset any checkpoint files in existance
   dbutils.fs.rm(config['checkpoint_path'], recurse=True)
   dbutils.fs.rm(config['src_path'], recurse=True)
+
+# COMMAND ----------
+
+
