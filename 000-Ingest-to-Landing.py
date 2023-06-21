@@ -48,4 +48,5 @@ else:
     if file.name > starting_file:
       src_path = os.path.join(src_dir, file.name)
       dbutils.fs.cp(raw_path, src_path)
+      print(f"Copying {raw_path} to {src_path}")
       time.sleep(10) # sleep for 1 second between copy operations
