@@ -121,7 +121,7 @@ def clone_tables_approach_1(bronze_offsets, silver_offsets, gold_offsets, ) :
 def clone_tables_approach_2(bronze_offsets) :
   #cloning bronze
   print("Cloning bronze")
-  clone_table(f"{config['db_path']}/{config['bronze_table']}",f"{sec_config['db_path']}/{sec_config['bronze_table']}",silver_offsets['source'])
+  clone_table(f"{config['db_path']}/{config['bronze_table']}",f"{sec_config['db_path']}/{sec_config['bronze_table']}",bronze_offsets['sink'])
 
 # COMMAND ----------
 
