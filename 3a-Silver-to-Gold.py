@@ -59,9 +59,7 @@ appId = config['gold_stream']+str(random.randint(0,100))
 
 def upsertToDelta(microBatchOutputDF, epochId):
   spark_session = microBatchOutputDF._jdf.sparkSession() 
-  print(f"app-id :{appId}")
-
-  metadata = {"stream":config['gold_stream'], "batch_id":epochId, "app_id":appId}
+  metadata = {"stream":config['gold_stream'], "batch_id":epochId}
   spark_session.conf().set("spark.databricks.delta.commitInfo.userMetadata", json.dumps(metadata))
   # Set the dataframe to view name
   microBatchOutputDF.createOrReplaceTempView("updates")
