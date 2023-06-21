@@ -33,7 +33,7 @@ _ = spark.catalog.setCurrentDatabase(config['db'])
 
 from pyspark.sql.functions import *
 
-if(site == 'primary' or site == 'primary2') :
+if(site == 'primary' or site == 'primary2' or site == 'secondary2') :
   _ = spark \
     .readStream \
     .table(config['bronze_table']) \

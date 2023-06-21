@@ -119,10 +119,9 @@ def clone_tables_approach_1(bronze_offsets, silver_offsets, gold_offsets, ) :
 
 
 def clone_tables_approach_2(bronze_offsets) :
-  if(validate_offsets(bronze_offsets)) :
-    #cloning bronze
-    print("Cloning bronze")
-    clone_table(f"{config['db_path']}/{config['bronze_table']}",f"{sec_config['db_path']}/{sec_config['bronze_table']}",silver_offsets['source'])
+  #cloning bronze
+  print("Cloning bronze")
+  clone_table(f"{config['db_path']}/{config['bronze_table']}",f"{sec_config['db_path']}/{sec_config['bronze_table']}",silver_offsets['source'])
 
 # COMMAND ----------
 
@@ -153,6 +152,7 @@ if (site == "primary"):
 
 elif(site == "primary2"):
   bronze_offsets = fetch_bronze_stream_offsets()
+  print(f"bronze_offsets:{bronze_offsets}")
   dbutils.notebook.run("./0-database",60,{"site": "secondary2"})
 
   clone_tables_approach_2(bronze_offsets)
@@ -179,3 +179,7 @@ df.write.mode("append").saveAsTable(f"{config['db']}.offset_tracker")
 
 # DBTITLE 1,Write to secondary db
 df.write.mode("append").saveAsTable(f"{sec_config['db']}.offset_tracker")
+
+# COMMAND ----------
+
+
