@@ -35,6 +35,7 @@ if(site == 'primary' or site == 'primary2') :
     raw_path = file.path
     src_path = os.path.join(src_dir, file.name)
     dbutils.fs.cp(raw_path, src_path)
+    print(f"Copying {raw_path} to {src_path}")
     time.sleep(1) # sleep for 1 second between copy operations
 else:
   # set current datebase context
