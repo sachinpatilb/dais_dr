@@ -21,7 +21,7 @@ primary_config['db_path'] = primary_config['mount_point']+'/database'
 primary_config['database'] = 'primary_db_dais'
 
 # file paths
-primary_config['source_path'] = primary_config['mount_point'] + '/src'
+primary_config['source_path'] = primary_config['mount_point'] + '/src1'
 primary_config['checkpoint_path'] = primary_config['mount_point'] + '/checkpoint'
 primary_config['schema_path'] = primary_config['mount_point'] + '/schema'
 primary_config['raw_path'] = '/Users/sachin.patil@databricks.com/dais/raw'
@@ -51,7 +51,7 @@ primary2_config['db_path'] = primary2_config['mount_point']+'/database'
 primary2_config['database'] = 'primary2_db_dais'
 
 # file paths
-primary2_config['source_path'] = primary2_config['mount_point'] + '/src'
+primary2_config['source_path'] = primary2_config['mount_point'] + '/src1'
 primary2_config['checkpoint_path'] = primary2_config['mount_point'] + '/checkpoint'
 primary2_config['schema_path'] = primary2_config['mount_point'] + '/schema'
 primary2_config['raw_path'] = '/Users/sachin.patil@databricks.com/dais/raw'

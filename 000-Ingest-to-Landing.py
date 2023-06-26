@@ -50,3 +50,7 @@ else:
       dbutils.fs.cp(raw_path, src_path)
       print(f"Copying {raw_path} to {src_path}")
       time.sleep(10) # sleep for 1 second between copy operations
+
+# COMMAND ----------
+
+

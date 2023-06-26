@@ -32,3 +32,7 @@ if(mode == "all" or mode == "checkpoint_only") :
   # reset any checkpoint files in existance
   dbutils.fs.rm(config['checkpoint_path'], recurse=True)
   dbutils.fs.rm(config['src_path'], recurse=True)
+
+# COMMAND ----------
+
+
