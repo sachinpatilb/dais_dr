@@ -179,7 +179,3 @@ df.write.mode("append").saveAsTable(f"{config['db']}.offset_tracker")
 
 # DBTITLE 1,Write to secondary db
 df.write.mode("append").saveAsTable(f"{sec_config['db']}.offset_tracker")
-
-# COMMAND ----------
-
-

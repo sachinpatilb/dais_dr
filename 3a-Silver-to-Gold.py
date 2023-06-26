@@ -84,7 +84,3 @@ gold_txn_df.writeStream \
   .outputMode("update") \
   .option("checkpointLocation",config['checkpoint_path']+"/gold") \
   .start()
-
-# COMMAND ----------
-
-

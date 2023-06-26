@@ -44,7 +44,3 @@ gold_txn_df = spark.readStream \
   .outputMode("append") \
   .option("checkpointLocation",config['checkpoint_path']+"/gold") \
   .table(config['gold_table'])
-
-# COMMAND ----------
-
-

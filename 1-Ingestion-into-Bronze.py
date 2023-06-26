@@ -39,7 +39,7 @@ _=(spark.readStream.format("cloudFiles")
             .option("cloudFiles.format","csv")
             .option("cloudFiles.inferSchema", "true")
             .option("cloudFiles.schemaLocation", config['schema_path'])
-            .option("cloudFiles.maxFilesPerTrigger", "1")
+            .option("cloudFiles.maxFilesPerTrigger", "3")
             .option("header",True)
             .load(config['src_path'])
             .writeStream
