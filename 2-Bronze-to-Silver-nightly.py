@@ -44,6 +44,7 @@ if(site == 'primary' or site == 'primary2' or site == 'secondary2') :
     .filter(col("id").isNotNull()) \
     .writeStream \
     .format("delta") \
+    .trigger(availableNow=True) \
     .outputMode("append") \
     .option("checkpointLocation",config['checkpoint_path']+"/silver") \
     .queryName(config['silver_stream'])\
@@ -62,8 +63,12 @@ else :
     .filter(col("id").isNotNull()) \
     .writeStream \
     .format("delta") \
-    .trigger(Trigger.AvailableNow) \
+    .trigger(TavailableNow=True) \
     .outputMode("append") \
     .option("checkpointLocation",config['checkpoint_path']+"/silver") \
     .queryName(config['silver_stream'])\
     .table(config['silver_table'])
+
+# COMMAND ----------
+
+

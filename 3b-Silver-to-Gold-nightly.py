@@ -40,7 +40,7 @@ gold_txn_df = spark.readStream \
   .selectExpr("window.start as start_time", "customer_id", "no_of_txn") \
   .writeStream \
   .format("delta") \
-  .trigger(Trigger.AvailableNow) \
+  .trigger(availableNow=True) \
   .queryName(config['gold_stream'])\
   .outputMode("append") \
   .option("checkpointLocation",config['checkpoint_path']+"/gold") \
