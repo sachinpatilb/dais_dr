@@ -68,7 +68,3 @@ else :
     .option("checkpointLocation",config['checkpoint_path']+"/silver") \
     .queryName(config['silver_stream'])\
     .table(config['silver_table'])
-
-# COMMAND ----------
-
-
