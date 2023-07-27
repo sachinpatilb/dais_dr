@@ -128,14 +128,6 @@ secondary2_config['gold_stream_b'] = "gold_stream_b"
 
 # COMMAND ----------
 
-# # create database if not exists
-# _ = spark.sql("create database if not exists {0} location '{1}'".format(secondary_config['database'],secondary_config['db_path']))
-
-# # set current datebase context
-# _ = spark.catalog.setCurrentDatabase(secondary_config['database'])
-
-# COMMAND ----------
-
 def get_configs(site, config):
   if site =="primary":
     config['src_path']=primary_config['source_path']

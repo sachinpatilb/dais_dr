@@ -20,26 +20,35 @@ display(df_with_event_ts)
 # COMMAND ----------
 
 from pyspark.sql.functions import *
-event_dates= (
+event_time= (
             df_with_event_ts
-            .select(date_format(col("event_time"),"yyyy-MM-dd").alias("dt_col"))
+            .select(date_format(col("event_time"),"yyyy-MM-dd-HH").alias("dt_col"))
             .distinct()
-            .orderBy( to_date(to_timestamp('event_time')))  # sorting of list is essential for logic below
+            .orderBy(to_timestamp('event_time'))  # sorting of list is essential for logic below
           ).collect()
 
 # COMMAND ----------
 
-for ev_dt in event_dates:
+display(event_time)
+
+# COMMAND ----------
+
+for ev_dt in event_time:
   dt=ev_dt['dt_col']
-  filtered_df = df_with_event_ts.filter(date_format(col("event_time"),"yyyy-MM-dd").alias("dt_col") == dt)
+  filtered_df = df_with_event_ts.filter(date_format(col("event_time"),"yyyy-MM-dd-HH").alias("dt_col") == dt)
   filtered_df=filtered_df.coalesce(1)
-  output_file_path = f"/Users/sachin.patil@databricks.com/dais/dataset2/{dt}.csv"
+  output_file_path = f"/Users/sachin.patil@databricks.com/dais/dataset5/{dt}.csv"
   filtered_df.write.format("csv").option("header", "true").option("delimiter", ",").mode("overwrite").save(output_file_path)
 
 # COMMAND ----------
 
 # MAGIC %fs
-# MAGIC ls /Users/sachin.patil@databricks.com/dais/dataset2/2023-01-03.csv/
+# MAGIC ls /Users/sachin.patil@databricks.com/dais/dataset5/2023-01-23-19.csv
+
+# COMMAND ----------
+
+# MAGIC %fs
+# MAGIC head /Users/sachin.patil@databricks.com/dais/dataset5/2023-01-23-19.csv/part-00000-tid-1882547258119715324-ed16421a-bb66-4c68-9182-93f7ddc8c4b1-2338-1-c000.csv
 
 # COMMAND ----------
 
@@ -48,9 +57,16 @@ for ev_dt in event_dates:
 
 # COMMAND ----------
 
+# MAGIC %fs
+# MAGIC ls /Users/sachin.patil@databricks.com/dais/src
+
+# COMMAND ----------
+
 import fnmatch
-dbfs_file_path = "/Users/sachin.patil@databricks.com/dais/dataset2"
-local_dir_path = "/Users/sachin.patil@databricks.com/dais/dataset3"
+import os
+
+dbfs_file_path = "/Users/sachin.patil@databricks.com/dais/dataset5"
+local_dir_path = "/Users/sachin.patil@databricks.com/dais/src"
 
 # Define a function to list all files recursively with a given extension
 def list_files_recursively(root, extension):
@@ -64,7 +80,7 @@ def list_files_recursively(root, extension):
   return result
 
 # Define the directory to search for CSV files recursively
-directory = '/Users/sachin.patil@databricks.com/dais/dataset2'
+directory = dbfs_file_path
 
 # Call the function to get the list of CSV files
 csv_files = list_files_recursively(directory, '*.csv')
@@ -72,7 +88,6 @@ csv_files = list_files_recursively(directory, '*.csv')
 # Print the list of CSV files
 for csv_file in csv_files:
   file_name = os.path.basename(os.path.dirname(csv_file))
-
   # Construct the new file path with the local directory name and file name
   new_file_path = local_dir_path + "/" + file_name
   # Copy the file from DBFS to the local directory with the new file name
@@ -82,7 +97,7 @@ for csv_file in csv_files:
 # COMMAND ----------
 
 # MAGIC %fs
-# MAGIC ls /Users/sachin.patil@databricks.com/dais/dataset3
+# MAGIC ls /Users/sachin.patil@databricks.com/dais/raw
 
 # COMMAND ----------
 
@@ -128,4 +143,24 @@ print(file_name)
 # COMMAND ----------
 
 # MAGIC %fs
-# MAGIC rm /Users/sachin.patil@databricks.com/dais/src
+# MAGIC cp -r /Users/sachin.patil@databricks.com/dais/src /Users/sachin.patil@databricks.com/dais/src_backup
+
+# COMMAND ----------
+
+# MAGIC %fs
+# MAGIC ls /Users/sachin.patil@databricks.com/dais/src_backup
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC select * from dais_dr.gold_txn_live
+
+# COMMAND ----------
+
+# MAGIC %fs
+# MAGIC cp -r /Users/sachin.patil@databricks.com/dais/src_backup /Users/sachin.patil@databricks.com/dais/raw
+
+# COMMAND ----------
+
+# MAGIC %fs
+# MAGIC ls '/Users/sachin.patil@databricks.com/dais/raw'
