@@ -14,7 +14,7 @@ if 'primary_config' not in locals().keys():
 # Primary Site config with approach 1
 
 # mount point name
-primary_config['mount_point'] ='/Users/sachin.patil@databricks.com/dais/primary1'
+primary_config['mount_point'] ='/Users/shasidhar.eranti@databricks.com/dr/primary1'
 primary_config['db_path'] = primary_config['mount_point']+'/database'
 
 # database name
@@ -24,7 +24,7 @@ primary_config['database'] = 'primary_db_dais'
 primary_config['source_path'] = primary_config['mount_point'] + '/src'
 primary_config['checkpoint_path'] = primary_config['mount_point'] + '/checkpoint'
 primary_config['schema_path'] = primary_config['mount_point'] + '/schema'
-primary_config['raw_path'] = '/Users/sachin.patil@databricks.com/dais/raw1'
+primary_config['raw_path'] = '/Users/shasidhar.eranti@databricks.com/dr/raw1'
 
 primary_config['bronze_table'] = "bronze_txn"
 primary_config['silver_table'] = "silver_txn"
@@ -44,7 +44,7 @@ if 'primary2_config' not in locals().keys():
   primary2_config = {}
 
 # mount point name
-primary2_config['mount_point'] ='/Users/sachin.patil@databricks.com/dais/primary2'
+primary2_config['mount_point'] ='/Users/shasidhar.eranti@databricks.com/dr/primary2'
 primary2_config['db_path'] = primary2_config['mount_point']+'/database'
 
 # database name
@@ -54,7 +54,7 @@ primary2_config['database'] = 'primary2_db_dais'
 primary2_config['source_path'] = primary2_config['mount_point'] + '/src'
 primary2_config['checkpoint_path'] = primary2_config['mount_point'] + '/checkpoint'
 primary2_config['schema_path'] = primary2_config['mount_point'] + '/schema'
-primary2_config['raw_path'] = '/Users/sachin.patil@databricks.com/dais/raw2'
+primary2_config['raw_path'] = '/Users/shasidhar.eranti@databricks.com/dr/raw2'
 
 primary2_config['bronze_table'] = "bronze_txn"
 primary2_config['silver_table'] = "silver_txn"
@@ -76,7 +76,7 @@ if 'secondary_config' not in locals().keys():
   secondary_config = {}
 
 # mount point name
-secondary_config['mount_point'] ='/Users/sachin.patil@databricks.com/dais/secondary1'
+secondary_config['mount_point'] ='/Users/shasidhar.eranti@databricks.com/dr/secondary1'
 secondary_config['db_path'] = secondary_config['mount_point']+'/database'
 
 # database name
@@ -86,7 +86,7 @@ secondary_config['database'] = 'secondary_db_dais'
 secondary_config['source_path'] = secondary_config['mount_point'] + '/src'
 secondary_config['checkpoint_path'] = secondary_config['mount_point'] + '/checkpoint'
 secondary_config['schema_path'] = secondary_config['mount_point'] + '/schema'
-secondary_config['raw_path'] = '/Users/sachin.patil@databricks.com/dais/raw'
+secondary_config['raw_path'] = '/Users/shasidhar.eranti@databricks.com/dr/raw'
 
 secondary_config['bronze_table'] = "bronze_txn"
 secondary_config['silver_table'] = "silver_txn"
@@ -104,7 +104,7 @@ if 'secondary2_config' not in locals().keys():
   secondary2_config = {}
 
 # mount point name
-secondary2_config['mount_point'] ='/Users/sachin.patil@databricks.com/dais/secondary2'
+secondary2_config['mount_point'] ='/Users/shasidhar.eranti@databricks.com/dr/secondary2'
 secondary2_config['db_path'] = secondary2_config['mount_point']+'/database'
 
 # database name
@@ -114,7 +114,7 @@ secondary2_config['database'] = 'secondary2_db_dais'
 secondary2_config['source_path'] = secondary2_config['mount_point'] + '/src'
 secondary2_config['checkpoint_path'] = secondary2_config['mount_point'] + '/checkpoint'
 secondary2_config['schema_path'] = secondary2_config['mount_point'] + '/schema'
-secondary2_config['raw_path'] = '/Users/sachin.patil@databricks.com/dais/raw'
+secondary2_config['raw_path'] = '/Users/shasidhar.eranti@databricks.com/dr/raw'
 
 secondary2_config['bronze_table'] = "bronze_txn"
 secondary2_config['silver_table'] = "silver_txn"
