@@ -12,6 +12,10 @@
 
 # COMMAND ----------
 
+# MAGIC %run ./streaming_listener
+
+# COMMAND ----------
+
 # Define widget
 dbutils.widgets.dropdown("site", "primary", ["primary","secondary","primary2","secondary2"],"Choose Primary or Secondary site")
 
@@ -28,6 +32,11 @@ config = get_configs(site,{})
 
 # set current datebase context
 _ = spark.catalog.setCurrentDatabase(config['db'])
+
+# COMMAND ----------
+
+my_listener = MyListener(config['listener_path'])
+spark.streams.addListener(my_listener)
 
 # COMMAND ----------
 

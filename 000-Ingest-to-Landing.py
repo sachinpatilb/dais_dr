@@ -17,6 +17,10 @@ config = get_configs(site,{})
 
 # COMMAND ----------
 
+config
+
+# COMMAND ----------
+
 import time
 import os
 
@@ -51,7 +55,3 @@ else:
       dbutils.fs.cp(raw_path, src_path)
       print(f"Copying {raw_path} to {src_path}")
       time.sleep(1) # sleep for 1 second between copy operations
-
-# COMMAND ----------
-
-
