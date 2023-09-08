@@ -15,7 +15,7 @@ if 'primary_config' not in locals().keys():
 
 # mount point name
 primary_config['mount_point'] ='/Users/shasidhar.eranti@databricks.com/dr/primary1'
-primary_config['listener_path'] = primary_config['mount_path']+'/listener'
+primary_config['listener_path'] = primary_config['mount_point']+'/listener'
 primary_config['db_path'] = primary_config['mount_point']+'/database'
 
 # database name
