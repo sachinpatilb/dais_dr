@@ -71,6 +71,7 @@ else :
     .filter(col("id").isNotNull()) \
     .writeStream \
     .format("delta") \
+    .option("mergeSchema", "true") \
     .outputMode("append") \
     .option("checkpointLocation",config['checkpoint_path']+"/silver") \
     .queryName(config['silver_stream'])\

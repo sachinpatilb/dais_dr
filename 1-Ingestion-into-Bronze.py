@@ -44,6 +44,7 @@ _=(spark.readStream.format("cloudFiles")
             .load(config['src_path'])
             .writeStream
             .format("delta")
+            .option("mergeSchema", "true")
             .option("checkpointLocation",config['checkpoint_path']+"/bronze")
             .queryName(config['bronze_stream'])
             .table(config['bronze_table'])

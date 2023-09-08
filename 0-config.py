@@ -133,6 +133,7 @@ def get_configs(site, config):
   if site =="primary":
     config['src_path']=primary_config['source_path']
     config['checkpoint_path']=primary_config['checkpoint_path']
+    config['listener_path']=primary_config['listener_path']
     config['schema_path']=primary_config['schema_path']
     config['raw_path']=primary_config['raw_path']
     config['db']=primary_config['database']
