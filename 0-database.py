@@ -119,6 +119,9 @@ _ = spark.catalog.setCurrentDatabase(db)
 # MAGIC   _rescued_data STRING,
 # MAGIC   diffOrig DOUBLE,
 # MAGIC   diffDest DOUBLE
+# MAGIC   oldbalanceOrg STRING,
+# MAGIC   isFraud STRING,
+# MAGIC   isFlaggedFraud STRING
 # MAGIC );
 
 # COMMAND ----------
