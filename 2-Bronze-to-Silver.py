@@ -12,7 +12,7 @@
 
 # COMMAND ----------
 
-# MAGIC %run ./streaming_listener
+# MAGIC %run ./Streaming_Listener
 
 # COMMAND ----------
 
