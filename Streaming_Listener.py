@@ -12,7 +12,7 @@ class MyListener(StreamingQueryListener):
     def __init__(self, base_dir):
        self.base_dir = base_dir
        dbutils.fs.mkdirs(self.base_dir)
-       dbutils.fs.mkdirs(self.base_dir"/"+logs)
+       dbutils.fs.mkdirs(self.base_dir+"/"+self.logs)
 
     def onQueryStarted(self, event):
        print("stream got started!")
