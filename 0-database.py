@@ -143,7 +143,10 @@ _ = spark.catalog.setCurrentDatabase(db)
 # MAGIC   step STRING,
 # MAGIC   type STRING,
 # MAGIC   event_time STRING,
-# MAGIC   _rescued_data STRING
+# MAGIC   _rescued_data STRING,
+# MAGIC   oldbalanceOrg STRING,
+# MAGIC   isFraud STRING,
+# MAGIC   isFlaggedFraud STRING
 # MAGIC );
 
 # COMMAND ----------
