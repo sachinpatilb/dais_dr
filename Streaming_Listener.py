@@ -20,10 +20,12 @@ class MyListener(StreamingQueryListener):
         query_id = str(event.progress.id)
         batch_id = int(event.progress.batchId)
         run_id = int(event.progress.runId)
+        file_name = f"{self.base_dir}/{self.logs}/{query_id}_{run_id}_{batch_id}.json"
 
-        f = open(f"{self.base_dir}/{self.logs}/{query_id}_{run_id}_{batch_id}.json", "w")
+        f = open(file_name, "w")
         f.write(progress)
         f.close()
+        print(f"Write file {file_name} completed.")
         
     def onQueryTerminated(self, event):
         print(f"{event.id} got terminated!")
