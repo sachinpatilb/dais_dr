@@ -12,6 +12,7 @@ class MyListener(StreamingQueryListener):
     def __init__(self, base_dir):
        self.base_dir = base_dir
        dbutils.fs.mkdirs(self.base_dir)
+       dbutils.fs.mkdirs(self.base_dir"/"+logs)
 
     def onQueryStarted(self, event):
        print("stream got started!")
@@ -21,7 +22,7 @@ class MyListener(StreamingQueryListener):
         query_id = str(event.progress.id)
         batch_id = int(event.progress.batchId)
         run_id = int(event.progress.runId)
-        file_name = f"{self.base_dir}/{self.logs}/{query_id}_{run_id}_{batch_id}.json"
+        file_name = f"/dbfs/{self.base_dir}/{self.logs}/{query_id}_{run_id}_{batch_id}.json"
 
         f = open(file_name, "w")
         f.write(progress)
